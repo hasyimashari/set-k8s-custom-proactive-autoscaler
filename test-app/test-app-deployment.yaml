@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-autoscaler
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app
+  namespace: test-autoscaler
+  labels:
+    app: test-autoscaler
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '5000'
+        prometheus.io/path: '/metrics'
+    spec:
+      containers:
+      - name: test-app
+        image: test-app:latest
+        imagePullPolicy: Never #for local testing
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-app-service
+  namespace: test-autoscaler
+  labels:
+    app: test-autoscaler
+spec:
+  selector:
+    app: test-app
+  ports:
+  - name: http
+    port: 80
+    targetPort: 5000
+    protocol: TCP
+  - name: metrics
+    port: 5000
+    targetPort: 5000
+    protocol: TCP
+  type: ClusterIP

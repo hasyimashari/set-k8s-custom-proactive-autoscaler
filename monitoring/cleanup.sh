@@ -43,9 +43,7 @@ safe_delete() {
 # Delete Grafana resources
 echo "🗑️  Removing Grafana resources..."
 safe_delete "service" "grafana" "monitoring"
-safe_delete "service" "grafana-enhanced" "monitoring"
 safe_delete "deployment" "grafana" "monitoring"
-safe_delete "deployment" "grafana-with-dashboards" "monitoring"
 safe_delete "configmap" "grafana-datasources" "monitoring"
 
 # Delete node-exporter resources
@@ -65,13 +63,12 @@ safe_delete "clusterrolebinding" "kube-state-metrics"
 echo "🗑️  Removing Prometheus resources..."
 safe_delete "service" "prometheus-service" "monitoring"
 safe_delete "deployment" "prometheus-deployment" "monitoring"
-safe_delete "configmap" "prometheus-config" "monitoring"
+safe_delete "configmap" "prometheus-server-conf" "monitoring"
 
 # Delete RBAC resources
 echo "🗑️  Removing RBAC resources..."
 safe_delete "clusterrolebinding" "prometheus"
 safe_delete "clusterrole" "prometheus"
-safe_delete "serviceaccount" "prometheus" "monitoring"
 
 # Delete monitoring namespace (this will also clean up any remaining resources)
 echo "🗑️  Removing monitoring namespace..."

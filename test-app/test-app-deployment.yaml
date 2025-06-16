@@ -46,15 +46,9 @@ metadata:
   labels:
     app: test-autoscaler
 spec:
-  selector:
-    app: test-app
+  type: NodePort  
   ports:
   - name: http
     port: 80
     targetPort: 5000
-    protocol: TCP
-  - name: metrics
-    port: 5000
-    targetPort: 5000
-    protocol: TCP
-  type: ClusterIP
+    nodePort: 30500 

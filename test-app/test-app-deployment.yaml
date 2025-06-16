@@ -1,15 +1,10 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: test-autoscaler
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: test-app
   namespace: test-autoscaler
   labels:
-    app: test-autoscaler
+    app: test-app
 spec:
   replicas: 3
   selector:
@@ -37,18 +32,3 @@ spec:
           limits:
             cpu: 500m
             memory: 512Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: test-app-service
-  namespace: test-autoscaler
-  labels:
-    app: test-autoscaler
-spec:
-  type: NodePort  
-  ports:
-  - name: http
-    port: 80
-    targetPort: 5000
-    nodePort: 30500 

@@ -65,48 +65,6 @@ class PrometheusClient:
             self.is_healthy = False
             return False
     
-    # def _execute_query(self, query: str):
-    #     url = urljoin(self.prometheus_url, "/api/v1/query")
-    #     params = {
-    #         'query': query,
-    #         'time': int(time.time())
-    #     }
-        
-    #     for attempt in range(self.max_retries):
-    #         try:
-    #             response = self.session.get(
-    #                 url,
-    #                 params=params,
-    #                 timeout=self.timeout_seconds
-    #             )
-    #             response.raise_for_status()
-                
-    #             data = response.json()
-
-    #             if data.get('status') != 'success':
-    #                 raise Exception(f"Query status: {data.get('status')}, error: {data.get('error')}")
-                
-    #             self.last_successful_query = datetime.now()
-    #             self.consecutive_failures = 0
-    #             self.is_healthy = True
-                
-    #             return data
-                
-    #         except requests.exceptions.RequestException as e:
-    #             if attempt < self.max_retries - 1:
-    #                 wait_time = 2 ** attempt
-    #                 time.sleep(wait_time)
-    #             else:
-    #                 self.consecutive_failures += 1
-    #                 self.is_healthy = False
-                    
-    #         except Exception as e:
-    #             self.consecutive_failures += 1
-    #             self.is_healthy = False
-    #             break
-        
-    #     return None
-    
     def _execute_range_query(self, 
                            query: str, 
                            start_time: datetime, 
@@ -188,34 +146,6 @@ class PrometheusClient:
             
         except Exception as e:
             return []
-    
-    # def get_current_workload(self,
-    #                        service_name: str,
-    #                        query_template: Optional[str] = None):
-
-    #     with self.client_lock:
-    #         try:
-    #             # Use provided template or default
-    #             template = query_template or self.default_query_template
-    #             query = template.format(service=service_name)
-                
-    #             # Execute query
-    #             data = self._execute_query(query)
-    #             if data is None:
-    #                 return None
-                
-    #             # Parse result
-    #             parsed_data = self._parse_query_result(data)
-    #             if not parsed_data:
-    #                 return 0.0
-                
-    #             # Get the most recent value
-    #             current_value = parsed_data[-1][1]
-                
-    #             return current_value
-                
-    #         except Exception as e:
-    #             return None
     
     def get_historical_workload(self, query_config: QueryConfig):
         with self.client_lock:
